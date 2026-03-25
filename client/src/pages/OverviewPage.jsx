@@ -164,8 +164,7 @@ const OverviewPage = () => {
               type="button"
               className="inline-flex items-center gap-2 rounded-xl border-2 border-black bg-white px-4 py-2 text-sm font-bold text-black dark:border-slate-700 dark:bg-slate-900 dark:text-white"
             >
-              Project Plant Pals
-              <ChevronDown size={18} />
+              Cluttered Canvas
             </button>
             <div className="flex rounded-xl border-2 border-black bg-white p-1 dark:border-slate-700 dark:bg-slate-900">
               <button
@@ -196,14 +195,14 @@ const OverviewPage = () => {
 
           {view === 'timeline' ? (
             <div className="overflow-x-auto rounded-2xl border-2 border-black bg-white p-4 dark:border-slate-700 dark:bg-slate-900/60">
-              <div className="mb-4 flex min-w-[640px] gap-2 border-b-2 border-black/10 pb-2 text-xs font-bold uppercase tracking-wider text-black/50 dark:border-white/10 dark:text-white/50">
+              <div className="mb-4 flex min-w-full sm:min-w-[640px] gap-2 border-b-2 border-black/10 pb-2 text-xs font-bold uppercase tracking-wider text-black/50 dark:border-white/10 dark:text-white/50">
                 <span className="w-24 shrink-0">Month</span>
                 <div className="flex flex-1 justify-between">
                   <span>Apr</span>
                   <span>May</span>
                 </div>
               </div>
-              <div className="relative min-h-[200px] min-w-[640px] rounded-xl bg-brand-cream/80 dark:bg-slate-900/60">
+              <div className="relative min-h-[200px] min-w-full sm:min-w-[640px] rounded-xl bg-brand-cream/80 dark:bg-slate-900/60">
                 <div className="absolute inset-0 flex">
                   {[0, 1, 2, 3, 4, 5, 6].map((i) => (
                     <div

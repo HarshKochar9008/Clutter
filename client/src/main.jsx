@@ -15,7 +15,7 @@ if (shouldUseDark) document.documentElement.classList.add('dark')
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <ClerkProvider afterSignOutUrl="/">
+    <ClerkProvider afterSignOutUrl="/" afterSignInUrl="/app">
       <BrowserRouter>
         <AuthProvider>
           <App />

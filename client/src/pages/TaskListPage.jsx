@@ -141,7 +141,7 @@ const TaskListPage = () => {
     'rounded-xl border-2 border-black bg-white px-3 py-2 text-sm font-medium text-black shadow-[2px_2px_0_0_#000] dark:border-slate-700 dark:bg-slate-900 dark:text-white'
 
   return (
-    <section className="space-y-4 w-1/3 mx-auto">
+    <section className="space-y-4 w-full max-w-4xl mx-auto">
       <div className="rounded-2xl border-2 border-black bg-white p-5 shadow-[6px_6px_0_0_#000] dark:border-slate-700 dark:bg-slate-900">
         <h2 className="font-display mb-3 text-xl font-bold text-black dark:text-white">Create Task</h2>
         <TaskForm onSubmit={handleCreate} submitLabel="Create Task" isSubmitting={formSubmitting} loadingText="Creating task..." />

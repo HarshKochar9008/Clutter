@@ -8,6 +8,7 @@ import AnalyticsPage from './pages/AnalyticsPage'
 import LandingPage from './pages/LandingPage'
 import OverviewPage from './pages/OverviewPage'
 import WorkspacePage from './pages/WorkspacePage'
+import CalendarPage from './pages/CalendarPage'
 
 function App() {
   return (
@@ -39,11 +40,7 @@ function App() {
         <Route
           path="calendar"
           element={
-            <WorkspacePage
-              title="Calendar"
-              description="Upcoming work ordered by task due dates."
-              emptyLabel="No upcoming deadlines yet."
-            />
+            <CalendarPage />
           }
         />
         <Route

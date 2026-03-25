@@ -59,9 +59,9 @@ const AnalyticsPage = () => {
           </div>
         ))}
       </div>
-      <div className="rounded-2xl border-2 border-black bg-white p-5 shadow-[6px_6px_0_0_#000] dark:border-slate-700 dark:bg-slate-900/60 dark:text-white">
+        <div className="rounded-2xl border-2 border-black bg-white p-5 shadow-[6px_6px_0_0_#000] dark:border-slate-700 dark:bg-slate-900/60 dark:text-white">
         <h3 className="font-display mb-4 text-lg font-bold text-black dark:text-white">Task mix</h3>
-        <div className="h-80">
+          <div className="min-w-0 h-64 w-full sm:h-80">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie

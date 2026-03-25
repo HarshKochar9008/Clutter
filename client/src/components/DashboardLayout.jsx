@@ -62,7 +62,7 @@ const DashboardLayout = () => {
                 </span>
               <span className="font-display text-xl font-bold tracking-tight">Clutter</span>
             </button>
-            <nav className="flex max-w-[100vw] flex-wrap items-center gap-1 overflow-x-auto pb-1 lg:pb-0">
+            <nav className="flex max-w-full flex-wrap items-center gap-1 overflow-x-auto pb-1 lg:pb-0">
               {links.map((link) => {
                 const Icon = link.icon
                 return (

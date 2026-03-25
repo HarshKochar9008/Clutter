@@ -186,7 +186,7 @@ const LandingPage = () => {
           <div className="mx-auto max-w-6xl px-4 md:px-6">
             <div className="grid grid-cols-1 gap-6 md:grid-cols-4">
               <div className="flex flex-col items-center rounded-2xl border border-white/15 bg-white/5 p-6 backdrop-blur-sm">
-                <span className="text-brand-yellow font-display text-3xl md:text-5xl font-bold">100k</span>
+                <span className="text-brand-yellow font-display text-3xl md:text-5xl font-bold">100</span>
                 <span className="mt-2 text-sm font-semibold text-white/80">Experiences</span>
               </div>
               <div className="flex flex-col items-center rounded-2xl border border-white/15 bg-white/5 p-6 backdrop-blur-sm">
@@ -194,7 +194,7 @@ const LandingPage = () => {
                 <span className="mt-2 text-sm font-semibold text-white/80">On-Time</span>
               </div>
               <div className="flex flex-col items-center rounded-2xl border border-white/15 bg-white/5 p-6 backdrop-blur-sm">
-                <span className="text-brand-yellow font-display text-3xl md:text-5xl font-bold">238k</span>
+                <span className="text-brand-yellow font-display text-3xl md:text-5xl font-bold">238</span>
                 <span className="mt-2 text-sm font-semibold text-white/80">People</span>
               </div>
               <div className="flex flex-col items-center rounded-2xl border border-white/15 bg-white/5 p-6 backdrop-blur-sm">

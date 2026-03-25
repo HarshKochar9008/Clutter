@@ -15,7 +15,17 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin: (origin, callback) => {
+      // Allow same-origin / non-browser requests.
+      if (!origin) return callback(null, true)
+
+      // Allow the configured CLIENT_URL plus any local Vite dev port.
+      const configured = process.env.CLIENT_URL
+      const isLocalHostPort = /^http:\/\/localhost:\d+$/.test(origin)
+      if (configured && origin === configured) return callback(null, true)
+      if (isLocalHostPort) return callback(null, true)
+      return callback(new Error("Not allowed by CORS"))
+    },
     credentials: true,
   })
 );
