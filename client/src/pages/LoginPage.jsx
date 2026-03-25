@@ -47,7 +47,7 @@ const LoginPage = () => {
         <h1 className="font-display text-2xl font-bold text-black dark:text-white">Sign in</h1>
         <p className="mt-1 text-sm font-medium text-black/60 dark:text-white/70">Welcome back — pick up where you left off.</p>
 
-        {hasClerkKey() && clerkIsLoaded && (
+        {hasClerkKey() && clerkIsLoaded && !clerkUserId && (
           <div className="mt-6">
             <SignInButton mode="modal" fallbackRedirectUrl="/app" signUpFallbackRedirectUrl="/app">
               <button
