@@ -1,7 +1,8 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
+import { Eye, EyeOff } from 'lucide-react'
 import { useAuth } from '../context/useAuth'
 
 const inputClass =
@@ -10,6 +11,7 @@ const inputClass =
 const LoginPage = () => {
   const navigate = useNavigate()
   const { login, loading, isAuthenticated, authReady } = useAuth()
+  const [showPassword, setShowPassword] = useState(false)
 
   // Already authenticated in this app — redirect to app after render.
   useEffect(() => {
@@ -47,7 +49,22 @@ const LoginPage = () => {
             {errors.email && <p className="mt-2 text-xs font-bold text-brand-orange">{errors.email.message}</p>}
           </div>
           <div>
-            <input type="password" {...register('password', { required: 'Password is required' })} placeholder="Password" className={inputClass} />
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                {...register('password', { required: 'Password is required' })}
+                placeholder="Password"
+                className={`${inputClass} pr-12`}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-black/60 hover:text-black dark:text-white/60 dark:hover:text-white"
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? <EyeOff size={18} strokeWidth={2.5} /> : <Eye size={18} strokeWidth={2.5} />}
+              </button>
+            </div>
             {errors.password && <p className="mt-2 text-xs font-bold text-brand-orange">{errors.password.message} </p>}
             <Link to="/forgot-password" className="text-sm font-medium text-brand-orange underline decoration-2 underline-offset-4">Forgot password?</Link>
           </div>

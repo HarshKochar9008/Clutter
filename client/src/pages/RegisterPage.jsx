@@ -1,7 +1,8 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
+import { Eye, EyeOff } from 'lucide-react'
 import { useAuth } from '../context/useAuth'
 
 const inputClass =
@@ -10,6 +11,7 @@ const inputClass =
 const RegisterPage = () => {
   const navigate = useNavigate()
   const { register: registerAccount, loading, isAuthenticated, authReady } = useAuth()
+  const [showPassword, setShowPassword] = useState(false)
 
   // Already authenticated in this app — redirect to app after render.
   useEffect(() => {
@@ -46,12 +48,22 @@ const RegisterPage = () => {
           {errors.name && <p className="-mt-2 text-xs font-bold text-brand-orange">{errors.name.message}</p>}
           <input {...register('email', { required: 'Email is required' })} placeholder="Email" className={inputClass} />
           {errors.email && <p className="-mt-2 text-xs font-bold text-brand-orange">{errors.email.message}</p>}
-          <input
-            type="password"
-            {...register('password', { required: 'Password is required', minLength: 8 })}
-            placeholder="Password (min 8 chars)"
-            className={inputClass}
-          />
+          <div className="relative">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              {...register('password', { required: 'Password is required', minLength: 8 })}
+              placeholder="Password (min 8 chars)"
+              className={`${inputClass} pr-12`}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-black/60 hover:text-black dark:text-white/60 dark:hover:text-white"
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
+            >
+              {showPassword ? <EyeOff size={18} strokeWidth={2.5} /> : <Eye size={18} strokeWidth={2.5} />}
+            </button>
+          </div>
           {errors.password && (
             <p className="-mt-2 text-xs font-bold text-brand-orange">Password should be at least 8 characters.</p>
           )}
