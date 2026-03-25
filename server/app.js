@@ -19,12 +19,30 @@ app.use(
       // Allow same-origin / non-browser requests.
       if (!origin) return callback(null, true)
 
-      // Allow the configured CLIENT_URL plus any local Vite dev port.
-      const configured = process.env.CLIENT_URL
+      // Allow the configured CLIENT_URL (exact origin) plus any local Vite dev port.
+      // On Vercel, it's common for CLIENT_URL to be missing or differ by scheme,
+      // and we don't want to crash with a 500. When CLIENT_URL is not set, allow.
+      const configuredRaw = process.env.CLIENT_URL
+      const allowedOrigins = configuredRaw
+        ? configuredRaw.split(",").map((s) => s.trim()).filter(Boolean)
+        : []
+
+      // When running on Vercel, `VERCEL_URL` is typically like "myapp.vercel.app".
+      // Allow that origin automatically to prevent CORS misconfig.
+      const vercelUrl = process.env.VERCEL_URL
+      if (vercelUrl) {
+        allowedOrigins.push(`https://${vercelUrl}`)
+        allowedOrigins.push(`http://${vercelUrl}`)
+      }
+
       const isLocalHostPort = /^http:\/\/localhost:\d+$/.test(origin)
-      if (configured && origin === configured) return callback(null, true)
-      if (isLocalHostPort) return callback(null, true)
-      return callback(new Error("Not allowed by CORS"))
+      const isAllowed =
+        allowedOrigins.length === 0
+          ? true // fallback to "allow" when env var isn't configured
+          : allowedOrigins.includes(origin) || isLocalHostPort
+
+      if (isAllowed) return callback(null, true)
+      return callback(null, false)
     },
     credentials: true,
   })
