@@ -1,9 +1,9 @@
 import { useForm } from 'react-hook-form'
 
 const field =
-  'w-full rounded-xl border-2 border-black bg-white px-3 py-2 text-sm font-medium text-black shadow-[3px_3px_0_0_#000] focus:outline-none focus:ring-2 focus:ring-brand-orange'
+  'w-full rounded-xl border-2 border-black bg-white px-3 py-2 text-sm font-medium text-black shadow-[3px_3px_0_0_#000] focus:outline-none focus:ring-2 focus:ring-brand-orange dark:border-slate-700 dark:bg-slate-900 dark:text-white'
 
-const TaskForm = ({ onSubmit, initialValues, submitLabel, onCancel }) => {
+const TaskForm = ({ onSubmit, initialValues, submitLabel, onCancel, isSubmitting, loadingText }) => {
   const { register, handleSubmit, formState: { errors } } = useForm({
     defaultValues: initialValues || {
       title: '',
@@ -48,18 +48,23 @@ const TaskForm = ({ onSubmit, initialValues, submitLabel, onCancel }) => {
           <button
             type="button"
             onClick={onCancel}
-            className="rounded-xl border-2 border-black bg-brand-cream px-4 py-2 text-sm font-bold text-black shadow-[3px_3px_0_0_#000]"
+            disabled={isSubmitting}
+            className="rounded-xl border-2 border-black bg-brand-cream px-4 py-2 text-sm font-bold text-black shadow-[3px_3px_0_0_#000] dark:border-slate-700 dark:bg-slate-800 dark:text-white"
           >
             Cancel
           </button>
         )}
         <button
           type="submit"
-          className="rounded-xl border-2 border-black bg-brand-orange px-4 py-2 text-sm font-bold text-black shadow-[3px_3px_0_0_#000]"
+          disabled={isSubmitting}
+          className="rounded-xl border-2 border-black bg-brand-orange px-4 py-2 text-sm font-bold text-black shadow-[3px_3px_0_0_#000] dark:border-slate-700"
         >
-          {submitLabel}
+          {isSubmitting ? 'Working...' : submitLabel}
         </button>
       </div>
+      {isSubmitting ? (
+        <p className="text-xs font-bold text-brand-orange">{loadingText || 'Working...'}</p>
+      ) : null}
     </form>
   )
 }

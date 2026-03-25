@@ -7,6 +7,7 @@ const {
   getTaskAnalytics,
 } = require("../controllers/task.controller");
 const authMiddleware = require("../middlewares/auth.middleware");
+const csrfMiddleware = require("../middlewares/csrf.middleware");
 const validate = require("../middlewares/validate.middleware");
 const {
   createTaskSchema,
@@ -17,6 +18,7 @@ const {
 const router = express.Router();
 
 router.use(authMiddleware);
+router.use(csrfMiddleware);
 
 router.get("/", validate(taskQuerySchema, "query"), getTasks);
 router.get("/analytics", getTaskAnalytics);

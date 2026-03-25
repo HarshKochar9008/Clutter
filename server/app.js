@@ -3,12 +3,15 @@ const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
+const cookieParser = require("cookie-parser");
 
 const authRoutes = require("./routes/auth.routes");
 const taskRoutes = require("./routes/task.routes");
 const errorMiddleware = require("./middlewares/error.middleware");
 
 const app = express();
+
+app.use(cookieParser());
 
 app.use(
   cors({

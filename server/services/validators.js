@@ -36,13 +36,14 @@ const updateTaskSchema = Joi.object({
 }).min(1);
 
 const taskQuerySchema = Joi.object({
-  status: Joi.string().valid("Todo", "In Progress", "Done"),
-  priority: Joi.string().valid("Low", "Medium", "High"),
+  // Treat empty string as "not provided" so clients can safely send `''` for "All".
+  status: Joi.string().valid("Todo", "In Progress", "Done").optional().empty(''),
+  priority: Joi.string().valid("Low", "Medium", "High").optional().empty(''),
   search: Joi.string().trim().allow(""),
   page: Joi.number().integer().min(1).default(1),
   limit: Joi.number().integer().min(1).max(50).default(10),
   sortBy: Joi.string()
-    .valid("createdAt", "dueDate", "priority")
+    .valid("createdAt", "dueDate", "priority", "updatedAt")
     .default("createdAt"),
   order: Joi.string().valid("asc", "desc").default("desc"),
 });

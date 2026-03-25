@@ -1,5 +1,5 @@
 import { createContext, useContext, useMemo, useState } from 'react'
-import { loginUser, registerUser } from '../services/auth.service'
+import { loginUser, logoutUser, registerUser } from '../services/auth.service'
 
 const AuthContext = createContext(null)
 
@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(false)
 
   const persistSession = (sessionData) => {
-    localStorage.setItem('token', sessionData.token)
+    // JWT token is stored server-side in an httpOnly cookie; keep only user state client-side.
     localStorage.setItem('user', JSON.stringify(sessionData.user))
     setUser(sessionData.user)
   }
@@ -39,9 +39,15 @@ export const AuthProvider = ({ children }) => {
   }
 
   const logout = () => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
-    setUser(null)
+    // Make logout asynchronous to clear cookies best-effort.
+    return (async () => {
+      try {
+        await logoutUser()
+      } finally {
+        localStorage.removeItem('user')
+        setUser(null)
+      }
+    })()
   }
 
   const value = useMemo(

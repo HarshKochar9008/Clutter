@@ -7,6 +7,7 @@ import TaskListPage from './pages/TaskListPage'
 import AnalyticsPage from './pages/AnalyticsPage'
 import LandingPage from './pages/LandingPage'
 import OverviewPage from './pages/OverviewPage'
+import WorkspacePage from './pages/WorkspacePage'
 
 function App() {
   return (
@@ -25,6 +26,36 @@ function App() {
         <Route index element={<OverviewPage />} />
         <Route path="tasks" element={<TaskListPage />} />
         <Route path="analytics" element={<AnalyticsPage />} />
+        <Route
+          path="projects"
+          element={
+            <WorkspacePage
+              title="Projects"
+              description="Track active projects based on latest task activity."
+              emptyLabel="No projects found yet. Create a task to start one."
+            />
+          }
+        />
+        <Route
+          path="calendar"
+          element={
+            <WorkspacePage
+              title="Calendar"
+              description="Upcoming work ordered by task due dates."
+              emptyLabel="No upcoming deadlines yet."
+            />
+          }
+        />
+        <Route
+          path="messages"
+          element={
+            <WorkspacePage
+              title="Messages"
+              description="Recent conversations simulated from task updates."
+              emptyLabel="No recent messages."
+            />
+          }
+        />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

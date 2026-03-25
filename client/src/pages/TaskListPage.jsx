@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import TaskCard from '../components/TaskCard'
 import TaskForm from '../components/TaskForm'
@@ -11,14 +12,16 @@ import {
 } from '../services/task.service'
 
 const TaskListPage = () => {
+  const [searchParams] = useSearchParams()
   const [tasks, setTasks] = useState([])
   const [loading, setLoading] = useState(true)
   const [editingTask, setEditingTask] = useState(null)
+  const [formSubmitting, setFormSubmitting] = useState(false)
   const [pagination, setPagination] = useState({ page: 1, totalPages: 1 })
   const [filters, setFilters] = useState({
     status: '',
     priority: '',
-    search: '',
+    search: searchParams.get('q') || '',
     sortBy: 'createdAt',
     order: 'desc',
     page: 1,
@@ -26,10 +29,22 @@ const TaskListPage = () => {
   })
   const debouncedSearch = useDebounce(filters.search)
 
-  const queryParams = useMemo(
-    () => ({ ...filters, search: debouncedSearch }),
-    [filters, debouncedSearch],
-  )
+  const queryParams = useMemo(() => {
+    // Backend Joi validation rejects empty strings for `status`/`priority`.
+    // When "All" is selected we omit those keys from the query entirely.
+    const params = { ...filters, search: debouncedSearch }
+
+    if (!params.status) delete params.status
+    if (!params.priority) delete params.priority
+
+    const page = Number(params.page)
+    params.page = Number.isFinite(page) && page >= 1 ? page : 1
+
+    const limit = Number(params.limit)
+    params.limit = Number.isFinite(limit) && limit >= 1 && limit <= 50 ? limit : 10
+
+    return params
+  }, [filters, debouncedSearch])
 
   const fetchTasks = async () => {
     setLoading(true)
@@ -53,17 +68,25 @@ const TaskListPage = () => {
     fetchTasks()
   }, [debouncedSearch, filters.status, filters.priority, filters.sortBy, filters.order, filters.page])
 
+  useEffect(() => {
+    const queryFromUrl = searchParams.get('q') || ''
+    setFilters((prev) => ({ ...prev, search: queryFromUrl, page: 1 }))
+  }, [searchParams])
+
   const handleCreate = async (payload) => {
     const normalized = normalizePayload(payload)
     const optimisticTask = { ...normalized, _id: `temp-${Date.now()}` }
     setTasks((prev) => [optimisticTask, ...prev])
     try {
+      setFormSubmitting(true)
       await createTask(normalized)
       toast.success('Task created')
       fetchTasks()
     } catch (error) {
       setTasks((prev) => prev.filter((task) => task._id !== optimisticTask._id))
       toast.error(error.response?.data?.message || 'Create failed')
+    } finally {
+      setFormSubmitting(false)
     }
   }
 
@@ -74,12 +97,15 @@ const TaskListPage = () => {
     setTasks((current) => current.map((task) => (task._id === id ? { ...task, ...normalized } : task)))
     setEditingTask(null)
     try {
+      setFormSubmitting(true)
       await updateTask(id, normalized)
       toast.success('Task updated')
       fetchTasks()
     } catch (error) {
       setTasks(prevTasks)
       toast.error(error.response?.data?.message || 'Update failed')
+    } finally {
+      setFormSubmitting(false)
     }
   }
 
@@ -112,16 +138,16 @@ const TaskListPage = () => {
   }
 
   const field =
-    'rounded-xl border-2 border-black bg-white px-3 py-2 text-sm font-medium text-black shadow-[2px_2px_0_0_#000]'
+    'rounded-xl border-2 border-black bg-white px-3 py-2 text-sm font-medium text-black shadow-[2px_2px_0_0_#000] dark:border-slate-700 dark:bg-slate-900 dark:text-white'
 
   return (
-    <section className="space-y-4">
-      <div className="rounded-2xl border-2 border-black bg-white p-5 shadow-[6px_6px_0_0_#000]">
-        <h2 className="font-display mb-3 text-xl font-bold text-black">Create Task</h2>
-        <TaskForm onSubmit={handleCreate} submitLabel="Create Task" />
+    <section className="space-y-4 w-1/3 mx-auto">
+      <div className="rounded-2xl border-2 border-black bg-white p-5 shadow-[6px_6px_0_0_#000] dark:border-slate-700 dark:bg-slate-900">
+        <h2 className="font-display mb-3 text-xl font-bold text-black dark:text-white">Create Task</h2>
+        <TaskForm onSubmit={handleCreate} submitLabel="Create Task" isSubmitting={formSubmitting} loadingText="Creating task..." />
       </div>
 
-      <div className="rounded-2xl border-2 border-black bg-brand-cream/80 p-4 shadow-[4px_4px_0_0_#000]">
+      <div className="rounded-2xl border-2 border-black bg-brand-cream/80 p-4 shadow-[4px_4px_0_0_#000] dark:border-slate-700 dark:bg-slate-900/60">
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           <input
             value={filters.search}
@@ -154,8 +180,8 @@ const TaskListPage = () => {
       </div>
 
       {editingTask && (
-        <div className="rounded-2xl border-2 border-black bg-brand-yellow/40 p-4 shadow-[4px_4px_0_0_#000]">
-          <h3 className="mb-2 font-display text-sm font-bold text-black">Editing task</h3>
+        <div className="rounded-2xl border-2 border-black bg-brand-yellow/40 p-4 shadow-[4px_4px_0_0_#000] dark:border-slate-700 dark:bg-slate-900/60">
+          <h3 className="mb-2 font-display text-sm font-bold text-black dark:text-white">Editing task</h3>
           <TaskForm
             initialValues={{
               ...editingTask,
@@ -164,13 +190,15 @@ const TaskListPage = () => {
             onSubmit={handleUpdate}
             submitLabel="Save Changes"
             onCancel={() => setEditingTask(null)}
+            isSubmitting={formSubmitting}
+            loadingText="Saving changes..."
           />
         </div>
       )}
 
       <div className="grid gap-3 md:grid-cols-2">
         {loading ? (
-          <p className="text-sm font-bold text-black/50">Loading tasks...</p>
+          <p className="text-sm font-bold text-black/50 dark:text-white/60">Loading tasks...</p>
         ) : tasks.length ? (
           tasks.map((task) => (
             <TaskCard
@@ -182,26 +210,26 @@ const TaskListPage = () => {
             />
           ))
         ) : (
-          <p className="text-sm font-bold text-black/50">No tasks found for current filters.</p>
+          <p className="text-sm font-bold text-black/50 dark:text-white/60">No tasks found for current filters.</p>
         )}
       </div>
 
       <div className="flex items-center justify-between">
-        <p className="text-sm font-bold text-black/60">
+        <p className="text-sm font-bold text-black/60 dark:text-white/60">
           Page {pagination.page} of {pagination.totalPages}
         </p>
         <div className="flex gap-2">
           <button
             disabled={pagination.page <= 1}
             onClick={() => setFilters((prev) => ({ ...prev, page: prev.page - 1 }))}
-            className="rounded-xl border-2 border-black bg-white px-3 py-2 text-sm font-bold shadow-[2px_2px_0_0_#000] disabled:opacity-40"
+            className="rounded-xl border-2 border-black bg-white px-3 py-2 text-sm font-bold shadow-[2px_2px_0_0_#000] disabled:opacity-40 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
           >
             Previous
           </button>
           <button
             disabled={pagination.page >= pagination.totalPages}
             onClick={() => setFilters((prev) => ({ ...prev, page: prev.page + 1 }))}
-            className="rounded-xl border-2 border-black bg-white px-3 py-2 text-sm font-bold shadow-[2px_2px_0_0_#000] disabled:opacity-40"
+            className="rounded-xl border-2 border-black bg-white px-3 py-2 text-sm font-bold shadow-[2px_2px_0_0_#000] disabled:opacity-40 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
           >
             Next
           </button>

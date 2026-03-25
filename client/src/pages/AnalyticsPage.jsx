@@ -37,30 +37,30 @@ const AnalyticsPage = () => {
   )
 
   if (loading) {
-    return <p className="font-bold text-black/50">Loading analytics...</p>
+    return <p className="font-bold text-black/50 dark:text-white/60">Loading analytics...</p>
   }
 
   return (
     <section className="space-y-6">
-      <h1 className="font-display text-3xl font-bold text-black">Analytics</h1>
+      <h1 className="font-display text-3xl font-bold text-black dark:text-white">Analytics</h1>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[
-          { label: 'Total tasks', value: analytics.total, bg: 'bg-brand-cream' },
-          { label: 'Completed', value: analytics.completed, bg: 'bg-brand-green/50' },
-          { label: 'Pending', value: analytics.pending, bg: 'bg-brand-yellow/60' },
-          { label: 'Completion %', value: `${analytics.completionRate}%`, bg: 'bg-brand-pink/50' },
+          { label: 'Total tasks', value: analytics.total, bg: 'bg-brand-cream dark:bg-slate-900/60' },
+          { label: 'Completed', value: analytics.completed, bg: 'bg-brand-green/50 dark:bg-slate-900/60' },
+          { label: 'Pending', value: analytics.pending, bg: 'bg-brand-yellow/60 dark:bg-slate-900/60' },
+          { label: 'Completion %', value: `${analytics.completionRate}%`, bg: 'bg-brand-pink/50 dark:bg-slate-900/60' },
         ].map((item) => (
           <div
             key={item.label}
-            className={`rounded-2xl border-2 border-black p-4 shadow-[4px_4px_0_0_#000] ${item.bg}`}
+            className={`rounded-2xl border-2 border-black p-4 shadow-[4px_4px_0_0_#000] ${item.bg} dark:border-slate-700 dark:text-white`}
           >
-            <p className="text-xs font-bold uppercase tracking-wide text-black/60">{item.label}</p>
-            <p className="font-display mt-1 text-3xl font-bold text-black">{item.value}</p>
+            <p className="text-xs font-bold uppercase tracking-wide text-black/60 dark:text-white/60">{item.label}</p>
+            <p className="font-display mt-1 text-3xl font-bold text-black dark:text-white">{item.value}</p>
           </div>
         ))}
       </div>
-      <div className="rounded-2xl border-2 border-black bg-white p-5 shadow-[6px_6px_0_0_#000]">
-        <h3 className="font-display mb-4 text-lg font-bold text-black">Task mix</h3>
+      <div className="rounded-2xl border-2 border-black bg-white p-5 shadow-[6px_6px_0_0_#000] dark:border-slate-700 dark:bg-slate-900/60 dark:text-white">
+        <h3 className="font-display mb-4 text-lg font-bold text-black dark:text-white">Task mix</h3>
         <div className="h-80">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
