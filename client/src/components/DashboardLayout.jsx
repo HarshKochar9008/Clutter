@@ -16,7 +16,7 @@ import { useAuth } from '../context/AuthContext'
 import ThemeToggle from './ThemeToggle'
 
 const navLinkClass = ({ isActive }) =>
-  `inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-bold transition ${
+  `inline-flex items-center gap-2 rounded-xl px-2 py-2 text-sm font-bold transition sm:px-3 ${
     isActive
       ? 'text-brand-orange'
       : 'text-black hover:bg-black/5 dark:text-white dark:hover:bg-white/10'
@@ -51,7 +51,7 @@ const DashboardLayout = () => {
     <div className="min-h-screen bg-brand-cream font-sans text-black dark:bg-black dark:text-white">
       <header className="border-b-2 border-black bg-brand-cream dark:border-slate-700 dark:bg-black">
         <div className="mx-auto flex max-w-[1600px] flex-wrap items-center justify-between gap-4 px-4 py-4 md:px-6">
-          <div className="flex items-center gap-8">
+          <div className="flex w-full flex-col items-start gap-3 sm:w-auto sm:flex-row sm:items-center sm:gap-8">
             <button
               type="button"
               onClick={() => navigate('/app')}
@@ -62,13 +62,14 @@ const DashboardLayout = () => {
                 </span>
               <span className="font-display text-xl font-bold tracking-tight">Clutter</span>
             </button>
-            <nav className="flex max-w-full flex-wrap items-center gap-1 overflow-x-auto pb-1 lg:pb-0">
+            <nav className="flex w-full max-w-full flex-nowrap items-center gap-1 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-x-visible lg:pb-0">
               {links.map((link) => {
                 const Icon = link.icon
                 return (
                   <NavLink key={link.to} to={link.to} end={link.end} className={navLinkClass}>
                     {Icon ? <Icon size={18} strokeWidth={2.5} /> : null}
-                    {link.label}
+                    <span className="hidden sm:inline">{link.label}</span>
+                    <span className="sr-only">{link.label}</span>
                   </NavLink>
                 )
               })}
