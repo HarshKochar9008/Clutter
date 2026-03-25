@@ -1,75 +1,34 @@
 import { Link } from 'react-router-dom'
-import { useAuth, SignInButton, SignUpButton, UserButton } from '@clerk/react'
 import { ArrowRight } from 'lucide-react'
+import { useAuth } from '../context/useAuth'
 
-const hasClerkKey = () => Boolean(import.meta.env.VITE_CLERK_PUBLISHABLE_KEY?.trim())
-
-/**
- * Clerk's <Show> renders nothing while auth is loading. Without a publishable key,
- * loading may never complete — so we always show /login and /register until Clerk is ready.
- */
 export function LandingHeaderAuth({ signInBtnClass, signUpBtnClass }) {
-  const { isLoaded, isSignedIn } = useAuth()
+  const { isAuthenticated, user } = useAuth()
 
-  if (!hasClerkKey() || !isLoaded) {
+  if (isAuthenticated) {
     return (
-      <>
-        <Link to="/login" className={signInBtnClass}>
-          Login
-        </Link>
-        <Link to="/register" className={signUpBtnClass}>
-          Sign up
-        </Link>
-      </>
-    )
-  }
-
-  if (isSignedIn) {
-    return (
-      <UserButton
-        appearance={{
-          elements: {
-            avatarBox: 'h-9 w-9 border-2 border-white/30',
-          },
-        }}
-      />
+      <Link to="/app" className={signInBtnClass}>
+        Open app{user?.name ? ` (${user.name.charAt(0).toUpperCase()})` : ''}
+      </Link>
     )
   }
 
   return (
     <>
-      <SignInButton mode="modal">
-        <button type="button" className={signInBtnClass}>
-          Login
-        </button>
-      </SignInButton>
-      <SignUpButton mode="modal">
-        <button type="button" className={signUpBtnClass}>
-          Sign up
-        </button>
-      </SignUpButton>
+      <Link to="/login" className={signInBtnClass}>
+        Login
+      </Link>
+      <Link to="/register" className={signUpBtnClass}>
+        Sign up
+      </Link>
     </>
   )
 }
 
 export function LandingHeroAuth({ heroLoginClass, heroCtaClass }) {
-  const { isLoaded, isSignedIn } = useAuth()
+  const { isAuthenticated } = useAuth()
 
-  if (!hasClerkKey() || !isLoaded) {
-    return (
-      <>
-        <Link to="/login" className={heroLoginClass}>
-          Log in
-        </Link>
-        <Link to="/register" className={heroCtaClass}>
-          Sign up
-          <ArrowRight size={18} strokeWidth={2.5} />
-        </Link>
-      </>
-    )
-  }
-
-  if (isSignedIn) {
+  if (isAuthenticated) {
     return (
       <Link to="/app" className={heroCtaClass}>
         Open app
@@ -80,33 +39,21 @@ export function LandingHeroAuth({ heroLoginClass, heroCtaClass }) {
 
   return (
     <>
-      <SignInButton mode="modal">
-        <button type="button" className={heroLoginClass}>
-          Log in
-        </button>
-      </SignInButton>
-      <SignUpButton mode="modal">
-        <button type="button" className={heroCtaClass}>
-          Sign up
-          <ArrowRight size={18} strokeWidth={2.5} />
-        </button>
-      </SignUpButton>
+      <Link to="/login" className={heroLoginClass}>
+        Log in
+      </Link>
+      <Link to="/register" className={heroCtaClass}>
+        Sign up
+        <ArrowRight size={18} strokeWidth={2.5} />
+      </Link>
     </>
   )
 }
 
 export function LandingPricingAuth({ pricingCtaClass }) {
-  const { isLoaded, isSignedIn } = useAuth()
+  const { isAuthenticated } = useAuth()
 
-  if (!hasClerkKey() || !isLoaded) {
-    return (
-      <Link to="/register" className={pricingCtaClass}>
-        Create account
-      </Link>
-    )
-  }
-
-  if (isSignedIn) {
+  if (isAuthenticated) {
     return (
       <Link to="/app" className={pricingCtaClass}>
         Go to dashboard
@@ -115,10 +62,8 @@ export function LandingPricingAuth({ pricingCtaClass }) {
   }
 
   return (
-    <SignUpButton mode="modal">
-      <button type="button" className={pricingCtaClass}>
-        Create account
-      </button>
-    </SignUpButton>
+    <Link to="/register" className={pricingCtaClass}>
+      Create account
+    </Link>
   )
 }

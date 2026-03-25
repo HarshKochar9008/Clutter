@@ -58,7 +58,7 @@ const OverviewPage = () => {
       return {
         id: task._id,
         title: task.title,
-        range: `${prettyDate(task.createdAt || Date.now())} - ${prettyDate(task.dueDate)}`,
+        range: `${prettyDate(task.createdAt ?? 0)} - ${prettyDate(task.dueDate)}`,
         left: `${Math.min(70, dayOffset * 6)}%`,
         width: `${Math.max(20, 34 - index * 4)}%`,
         strip: stripByPriority[task.priority] || 'bg-brand-yellow',
@@ -74,7 +74,7 @@ const OverviewPage = () => {
         .map((task) => ({
           id: task._id,
           name: task.title,
-          time: prettyDate(task.updatedAt || Date.now()),
+          time: prettyDate(task.updatedAt ?? 0),
           preview: `${task.status} · ${task.priority} priority`,
         })),
     [tasks],

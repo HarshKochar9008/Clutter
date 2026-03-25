@@ -2,10 +2,7 @@ import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
-import { useAuth } from '../context/AuthContext'
-import { SignInButton, useAuth as useClerkAuth } from '@clerk/react'
-
-const hasClerkKey = () => Boolean(import.meta.env.VITE_CLERK_PUBLISHABLE_KEY?.trim())
+import { useAuth } from '../context/useAuth'
 
 const inputClass =
   'w-full rounded-2xl border-2 border-black bg-white px-4 py-3 text-sm font-medium text-black placeholder:text-black/40 shadow-[4px_4px_0_0_#000] focus:outline-none focus:ring-2 focus:ring-brand-orange dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder:text-white/30'
@@ -13,12 +10,9 @@ const inputClass =
 const LoginPage = () => {
   const navigate = useNavigate()
   const { login, loading, isAuthenticated, authReady } = useAuth()
-  const { isLoaded: clerkIsLoaded, isSignedIn: clerkIsSignedIn } = useClerkAuth()
 
-  // Already signed in via Clerk — redirect to app after render
+  // Already authenticated in this app — redirect to app after render.
   useEffect(() => {
-    // Only redirect once the *app session* exists (backend sync succeeded).
-    // This prevents redirect loops when Clerk auth exists but backend sync fails.
     if (authReady && isAuthenticated) {
       navigate('/app', { replace: true })
     }
@@ -46,24 +40,6 @@ const LoginPage = () => {
         </div>
         <h1 className="font-display text-2xl font-bold text-black dark:text-white">Sign in</h1>
         <p className="mt-1 text-sm font-medium text-black/60 dark:text-white/70">Welcome back — pick up where you left off.</p>
-
-        {hasClerkKey() && clerkIsLoaded && !clerkIsSignedIn && (
-          <div className="mt-6">
-            <SignInButton mode="modal" fallbackRedirectUrl="/app" signUpFallbackRedirectUrl="/app">
-              <button
-                type="button"
-                className="w-full rounded-2xl border-2 border-black bg-white py-3 text-sm font-bold text-black shadow-[4px_4px_0_0_#000] transition hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_0_#000] dark:border-slate-700 dark:bg-slate-950 dark:text-white"
-              >
-                Continue with Clerk
-              </button>
-            </SignInButton>
-            <div className="my-4 flex items-center gap-3">
-              <span className="h-[2px] w-full bg-black/20 dark:bg-white/20" />
-              <span className="text-xs font-bold text-black/60 dark:text-white/60">OR</span>
-              <span className="h-[2px] w-full bg-black/20 dark:bg-white/20" />
-            </div>
-          </div>
-        )}
 
         <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-4">
           <div>

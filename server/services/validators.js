@@ -19,15 +19,6 @@ const loginSchema = Joi.object({
   password: Joi.string().required(),
 });
 
-const clerkLoginSchema = Joi.object({
-  // Clerk session token (JWT) retrieved on the client (do not send the Clerk secret key).
-  // Token may be omitted because Clerk also provides it via the `__session` cookie
-  // on same-origin requests.
-  token: Joi.string().optional(),
-  email: Joi.string().trim().lowercase().email().optional(),
-  name: Joi.string().trim().min(2).max(80).optional().allow(""),
-});
-
 const createTaskSchema = Joi.object({
   title: Joi.string().trim().min(2).max(120).required(),
   description: Joi.string().allow("").max(2000).default(""),
@@ -60,7 +51,6 @@ const taskQuerySchema = Joi.object({
 module.exports = {
   registerSchema,
   loginSchema,
-  clerkLoginSchema,
   createTaskSchema,
   updateTaskSchema,
   taskQuerySchema,

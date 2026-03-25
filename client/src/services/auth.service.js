@@ -14,8 +14,3 @@ export const logoutUser = async () => {
   const response = await api.post('/auth/logout')
   return response.data
 }
-
-export const clerkLoginUser = async ({ token, email, name } = {}) => {
-  const response = await api.post('/auth/clerk', { token, email, name })
-  return response.data.data
-}
