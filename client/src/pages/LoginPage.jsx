@@ -12,15 +12,17 @@ const inputClass =
 
 const LoginPage = () => {
   const navigate = useNavigate()
-  const { login, loading } = useAuth()
+  const { login, loading, isAuthenticated, authReady } = useAuth()
   const { isLoaded: clerkIsLoaded, userId: clerkUserId } = useClerkAuth()
 
   // Already signed in via Clerk — redirect to app after render
   useEffect(() => {
-    if (hasClerkKey() && clerkIsLoaded && clerkUserId) {
+    // Only redirect once the *app session* exists (backend sync succeeded).
+    // This prevents redirect loops when Clerk auth exists but backend sync fails.
+    if (authReady && isAuthenticated) {
       navigate('/app', { replace: true })
     }
-  }, [clerkIsLoaded, clerkUserId, navigate])
+  }, [authReady, isAuthenticated, navigate])
   const { register, handleSubmit, formState: { errors } } = useForm()
 
   const onSubmit = async (values) => {
