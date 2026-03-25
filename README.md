@@ -1,4 +1,8 @@
-# Task Management Web App
+# Clutter - Task Management Web App
+
+![Clutter Review Screenshot](client/public/Preview.png)
+
+
 
 A production-style full-stack task management app with authentication, task CRUD, filtering, analytics, and a modern responsive UI.
 
