@@ -9,7 +9,7 @@ const hasClerkKey = () => Boolean(import.meta.env.VITE_CLERK_PUBLISHABLE_KEY?.tr
  * loading may never complete — so we always show /login and /register until Clerk is ready.
  */
 export function LandingHeaderAuth({ signInBtnClass, signUpBtnClass }) {
-  const { isLoaded, userId } = useAuth()
+  const { isLoaded, isSignedIn } = useAuth()
 
   if (!hasClerkKey() || !isLoaded) {
     return (
@@ -24,7 +24,7 @@ export function LandingHeaderAuth({ signInBtnClass, signUpBtnClass }) {
     )
   }
 
-  if (userId) {
+  if (isSignedIn) {
     return (
       <UserButton
         appearance={{
@@ -53,7 +53,7 @@ export function LandingHeaderAuth({ signInBtnClass, signUpBtnClass }) {
 }
 
 export function LandingHeroAuth({ heroLoginClass, heroCtaClass }) {
-  const { isLoaded, userId } = useAuth()
+  const { isLoaded, isSignedIn } = useAuth()
 
   if (!hasClerkKey() || !isLoaded) {
     return (
@@ -69,7 +69,7 @@ export function LandingHeroAuth({ heroLoginClass, heroCtaClass }) {
     )
   }
 
-  if (userId) {
+  if (isSignedIn) {
     return (
       <Link to="/app" className={heroCtaClass}>
         Open app
@@ -96,7 +96,7 @@ export function LandingHeroAuth({ heroLoginClass, heroCtaClass }) {
 }
 
 export function LandingPricingAuth({ pricingCtaClass }) {
-  const { isLoaded, userId } = useAuth()
+  const { isLoaded, isSignedIn } = useAuth()
 
   if (!hasClerkKey() || !isLoaded) {
     return (
@@ -106,7 +106,7 @@ export function LandingPricingAuth({ pricingCtaClass }) {
     )
   }
 
-  if (userId) {
+  if (isSignedIn) {
     return (
       <Link to="/app" className={pricingCtaClass}>
         Go to dashboard

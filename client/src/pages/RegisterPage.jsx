@@ -13,7 +13,7 @@ const inputClass =
 const RegisterPage = () => {
   const navigate = useNavigate()
   const { register: registerAccount, loading, isAuthenticated, authReady } = useAuth()
-  const { isLoaded: clerkIsLoaded, userId: clerkUserId } = useClerkAuth()
+  const { isLoaded: clerkIsLoaded, isSignedIn: clerkIsSignedIn } = useClerkAuth()
 
   // Already signed in via Clerk — redirect to app after render
   useEffect(() => {
@@ -47,7 +47,7 @@ const RegisterPage = () => {
         <h1 className="font-display text-2xl font-bold text-black dark:text-white">Create account</h1>
         <p className="mt-1 text-sm font-medium text-black/60 dark:text-white/70">Start shipping with a workspace that feels intentional.</p>
 
-        {hasClerkKey() && clerkIsLoaded && !clerkUserId && (
+        {hasClerkKey() && clerkIsLoaded && !clerkIsSignedIn && (
           <div className="mt-6">
             <SignUpButton mode="modal" fallbackRedirectUrl="/app" signInFallbackRedirectUrl="/app">
               <button

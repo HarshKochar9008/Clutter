@@ -13,7 +13,7 @@ const inputClass =
 const LoginPage = () => {
   const navigate = useNavigate()
   const { login, loading, isAuthenticated, authReady } = useAuth()
-  const { isLoaded: clerkIsLoaded, userId: clerkUserId } = useClerkAuth()
+  const { isLoaded: clerkIsLoaded, isSignedIn: clerkIsSignedIn } = useClerkAuth()
 
   // Already signed in via Clerk — redirect to app after render
   useEffect(() => {
@@ -47,7 +47,7 @@ const LoginPage = () => {
         <h1 className="font-display text-2xl font-bold text-black dark:text-white">Sign in</h1>
         <p className="mt-1 text-sm font-medium text-black/60 dark:text-white/70">Welcome back — pick up where you left off.</p>
 
-        {hasClerkKey() && clerkIsLoaded && !clerkUserId && (
+        {hasClerkKey() && clerkIsLoaded && !clerkIsSignedIn && (
           <div className="mt-6">
             <SignInButton mode="modal" fallbackRedirectUrl="/app" signUpFallbackRedirectUrl="/app">
               <button
